@@ -11,6 +11,11 @@ namespace Order.API.Infrastructure.Configurations
             builder.Property(oi => oi.UnitPrice)
                 .IsRequired()
                 .HasPrecision(18, 2);
+
+            builder
+                .HasOne(i => i.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(i => i.OrderId);
         }
     }
 }

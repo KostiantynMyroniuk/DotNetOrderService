@@ -14,6 +14,12 @@ namespace Order.API.Infrastructure.Configurations
 
             builder.Property(o => o.RequestId)
                 .IsRequired();
+
+            builder
+                .HasMany(o => o.Items)
+                .WithOne(i => i.Order)
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

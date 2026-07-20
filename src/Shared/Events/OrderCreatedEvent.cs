@@ -7,7 +7,7 @@ namespace Shared.Events
     public record OrderCreatedEvent(
         Guid OrderId,
         string ShippingAddress,
-        string ShippintCountry,
+        string ShippingCountry,
         string ShippingCity,
         string ZipCode,
         decimal TotalAmount,

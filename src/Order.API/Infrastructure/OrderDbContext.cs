@@ -8,6 +8,8 @@ namespace Order.API.Infrastructure
     {
         public DbSet<OrderModel> Orders { get; set; } = default!;
 
+        public DbSet<OrderItem> OrderItems { get; set; } = default!;
+
         public DbSet<Product> Products { get; set; } = default!;
 
         public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
