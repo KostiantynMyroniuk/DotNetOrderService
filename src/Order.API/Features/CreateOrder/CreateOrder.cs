@@ -7,7 +7,7 @@ using Order.API.Infrastructure;
 using Order.API.Models;
 using Shared.Events;
 
-namespace Order.API.Features.Commands
+namespace Order.API.Features.CreateOrder
 {
     public record CreateOrderCommand(
         Guid requestId,

@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Order.API.Features.Commands;
+using Order.API.Features.CreateOrder;
 
 namespace Order.API.Controllers
 {
