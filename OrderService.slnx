@@ -1,7 +1,13 @@
 <Solution>
+  <Folder Name="/apis/">
+    <Project Path="src/Order.API/Order.API.csproj" Id="76c066fe-9ed1-43b4-b611-1dc322d599f8" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Order.IntegrationTests/Order.IntegrationTests.csproj" Id="528d1007-ba92-469b-90bb-df729f845a87" />
+    <Project Path="tests/Order.UnitTests/Order.UnitTests.csproj" Id="98f7d760-cf5a-4001-8bc4-68622a720172" />
+  </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="src/Order.API/Order.API.csproj" Id="76c066fe-9ed1-43b4-b611-1dc322d599f8" />
   <Project Path="src/Shared/Shared.csproj" Id="fce18e40-f6eb-4227-a8d2-e6d497458095" />
 </Solution>

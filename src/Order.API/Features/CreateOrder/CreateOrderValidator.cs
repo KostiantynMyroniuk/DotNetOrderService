@@ -6,9 +6,6 @@ namespace Order.API.Features.CreateOrder
     {
         public CreateOrderValidator()
         {
-            RuleFor(o => o.RequestId)
-                .NotEmpty(); 
-
             RuleFor(o => o.ShippingAddress)
                 .NotEmpty()
                 .MaximumLength(200);
@@ -29,7 +26,6 @@ namespace Order.API.Features.CreateOrder
 
             RuleForEach(o => o.Items)
                 .SetValidator(new CreateOrderItemDtoValidator());
-                
         }
     }
 
