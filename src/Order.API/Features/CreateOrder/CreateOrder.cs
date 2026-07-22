@@ -108,7 +108,14 @@ namespace Order.API.Features.CreateOrder
                 var existingOrder = await _context.Orders
                     .FirstOrDefaultAsync(o => o.RequestId == request.RequestId, cancellationToken);
 
-                return Result.Ok(existingOrder!.Id);
+                if (existingOrder is null)
+                {
+                    _logger.LogError("Unique constraint violation for requestId {RequestId} but no matching order was found", request.RequestId);
+
+                    return Result.Fail(new Error("Duplicate request detected but original order could not be located."));
+                }
+
+                return Result.Ok(existingOrder.Id);
             }
 
             return Result.Ok(order.Id);

@@ -1,7 +1,10 @@
 ﻿using Azure.Identity;
+using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Order.API.Behaviors;
 using Order.API.Controllers;
+using Order.API.ExceptionHandlers;
 using Order.API.Infrastructure;
 
 namespace Order.API.Extensions
@@ -12,13 +15,21 @@ namespace Order.API.Extensions
         {
             builder.Services.AddControllers();
 
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+            builder.Services.AddProblemDetails();
+
             builder.Configuration.AddAzureKeyVault(
                 new Uri(builder.Configuration["KeyVaultUrl"] ?? throw new InvalidOperationException("KeyVaultUrl is not configured")),
                 new DefaultAzureCredential());
 
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
             builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
             builder.Services.AddDbContext<OrderDbContext>(options =>
