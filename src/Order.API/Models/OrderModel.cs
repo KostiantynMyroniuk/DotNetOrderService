@@ -14,6 +14,8 @@ namespace Order.API.Models
 
         public DateTime CreatedAt { get; private set; }
 
+        public OrderStatus Status { get; set; }
+
         public List<OrderItem> Items { get; set; } = new();
 
         [NotMapped]
@@ -26,6 +28,15 @@ namespace Order.API.Models
             Id = Guid.CreateVersion7();
             RequestId = requestId;
             CreatedAt = DateTime.UtcNow;
+            Status = OrderStatus.Processing;
         }
+    }
+
+    public enum OrderStatus
+    {
+        Processing,
+        Shipped,
+        Delivered,
+        Cancelled
     }
 }

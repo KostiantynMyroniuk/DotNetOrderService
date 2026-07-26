@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Order.API.Extensions;
 using Order.API.Features.CreateOrder;
+using Order.API.Features.GetAllOrders;
+using Order.API.Features.GetOrderById;
+using Order.API.Models.Dtos;
 
 namespace Order.API.Controllers
 {
@@ -26,22 +29,33 @@ namespace Order.API.Controllers
         {
             var result = await _orderServices.Mediator.Send(command with { RequestId = requestId }, ct);
 
-            if (result.IsSuccess)
-            {
-                return Created($"api/orders/{result.Value}", new { id = result.Value });
-            }
+            if (result.IsFailed)
+                result.ToActionResult(this);
 
-            return MapFailureToResponse(result);
+            return Created($"api/orders/{result.Value}", result.Value);
         }
 
-        private IActionResult MapFailureToResponse(ResultBase result)
+        [HttpGet]
+        public async Task<ActionResult<OrderModelDto>> GetOrderById(
+            [FromQuery] GetOrderByIdQuery query,
+            CancellationToken ct)
         {
-            if (result.HasError<NotFoundError>(out var notFoundErrors))
-                return NotFound(notFoundErrors.Select(e => e.Message));
+            var result = await _orderServices.Mediator.Send(query, ct);
 
-            return Problem(
-                detail: string.Join("; ", result.Errors.Select(e => e.Message)),
-                statusCode: StatusCodes.Status500InternalServerError);
+            if (result.IsFailed)
+                return result.ToActionResult(this);
+
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllOrders(
+            [FromBody] GetAllOrdersQuery query,
+            CancellationToken ct)
+        {
+            var items = await _orderServices.Mediator.Send(query, ct);
+
+            return Ok(items);
         }
     }
 }
