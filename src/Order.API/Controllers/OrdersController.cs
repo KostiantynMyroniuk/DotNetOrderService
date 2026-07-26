@@ -35,12 +35,12 @@ namespace Order.API.Controllers
             return Created($"api/orders/{result.Value}", result.Value);
         }
 
-        [HttpGet]
+        [HttpGet("{orderId:guid}")]
         public async Task<ActionResult<OrderModelDto>> GetOrderById(
-            [FromQuery] GetOrderByIdQuery query,
+            [FromQuery] Guid orderId,
             CancellationToken ct)
         {
-            var result = await _orderServices.Mediator.Send(query, ct);
+            var result = await _orderServices.Mediator.Send(new GetOrderByIdQuery(orderId), ct);
 
             if (result.IsFailed)
                 return result.ToActionResult(this);
@@ -50,7 +50,7 @@ namespace Order.API.Controllers
 
         [HttpGet]
         public async Task<ActionResult> GetAllOrders(
-            [FromBody] GetAllOrdersQuery query,
+            [FromQuery] GetAllOrdersQuery query,
             CancellationToken ct)
         {
             var items = await _orderServices.Mediator.Send(query, ct);

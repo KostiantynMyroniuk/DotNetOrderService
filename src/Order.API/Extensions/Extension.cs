@@ -15,6 +15,8 @@ namespace Order.API.Extensions
         {
             builder.Services.AddControllers();
 
+            builder.Services.AddSwaggerGen();
+
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
             builder.Services.AddProblemDetails();

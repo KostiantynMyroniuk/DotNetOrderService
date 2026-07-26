@@ -10,8 +10,10 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseSwagger();
+
+app.UseSwaggerUI();
 
 app.Run();
