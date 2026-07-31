@@ -30,14 +30,14 @@ namespace Order.API.Controllers
             var result = await _orderServices.Mediator.Send(command with { RequestId = requestId }, ct);
 
             if (result.IsFailed)
-                result.ToActionResult(this);
+                return result.ToActionResult(this);
 
             return Created($"api/orders/{result.Value}", result.Value);
         }
 
         [HttpGet("{orderId:guid}")]
         public async Task<ActionResult<OrderModelDto>> GetOrderById(
-            [FromQuery] Guid orderId,
+            [FromRoute] Guid orderId,
             CancellationToken ct)
         {
             var result = await _orderServices.Mediator.Send(new GetOrderByIdQuery(orderId), ct);

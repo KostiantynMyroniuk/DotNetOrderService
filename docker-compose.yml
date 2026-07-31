@@ -1,6 +1,30 @@
 services:
   order.api:
     image: ${DOCKER_REGISTRY-}orderapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__OrderDb=Server=mssql,1433;Database=OrderDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=true
+
     build:
       context: .
       dockerfile: src/Order.API/Dockerfile
+    ports:
+      - "8080"
+      - "8081"
+    depends_on:
+      mssql:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "mssql"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+

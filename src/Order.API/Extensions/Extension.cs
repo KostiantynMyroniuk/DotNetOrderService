@@ -2,6 +2,7 @@
 using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Order.API.Behaviors;
 using Order.API.Controllers;
 using Order.API.ExceptionHandlers;
@@ -56,6 +57,18 @@ namespace Order.API.Extensions
             });
 
             builder.Services.AddScoped<OrderServices>();
+        }
+
+        public static void AddHealthChecks(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddHealthChecks()
+                .AddSqlServer(
+                    connectionString: builder.Configuration.GetConnectionString("OrderDb"),
+                    healthQuery: "SELECT 1;",
+                    name: "SQL Server",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "db", "sql", "sqlserver" }
+                );
         }
     }
 }

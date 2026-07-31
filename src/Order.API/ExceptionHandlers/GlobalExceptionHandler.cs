@@ -44,8 +44,7 @@ namespace Order.API.ExceptionHandlers
             }
             else
             {
-                _logger.LogWarning("Handled exception of type {ExceptionType}: {Message}\", exception.GetType().Name, exception.Message", 
-                    exception.GetType().Name, exception.Message);
+                _logger.LogWarning("Handled exception of type {ExceptionType}: {Message}", exception.GetType().Name, exception.Message);
             }
 
             httpContext.Response.StatusCode = statusCodes;
