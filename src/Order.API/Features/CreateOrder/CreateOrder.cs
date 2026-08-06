@@ -83,12 +83,11 @@ namespace Order.API.Features.CreateOrder
             {
                 _context.Orders.Add(order);
 
+                var shippingAddress = new ShippingAddressDto(order.ShippingAddress, order.ShippingCountry, order.ShippingCity, order.ZipCode);
+
                 await _publishEndpoint.Publish(new OrderCreatedEvent(
                     OrderId: order.Id,
-                    ShippingAddress: order.ShippingAddress,
-                    ShippingCountry: order.ShippingCountry,
-                    ShippingCity: order.ShippingCity,
-                    ZipCode: order.ZipCode,
+                    ShippingAddress: shippingAddress,
                     TotalAmount: order.TotalAmount,
                     CreatedAt: order.CreatedAt,
                     Items: order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.Quantity, i.UnitPrice)).ToList()), cancellationToken);

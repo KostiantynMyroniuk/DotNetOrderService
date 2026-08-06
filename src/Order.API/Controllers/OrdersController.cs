@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Order.API.Extensions;
+using Order.API.Features.CancelOrder;
 using Order.API.Features.CreateOrder;
 using Order.API.Features.GetAllOrders;
 using Order.API.Features.GetOrderById;
@@ -14,11 +15,11 @@ namespace Order.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly OrderServices _orderServices;
+        private readonly IMediator _mediator;
 
-        public OrdersController(OrderServices orderServices)
+        public OrdersController(IMediator mediator)
         {
-            _orderServices = orderServices;
+            _mediator = mediator;
         }
 
         [HttpPost]
@@ -27,7 +28,7 @@ namespace Order.API.Controllers
             [FromBody] CreateOrderCommand command,
             CancellationToken ct)
         {
-            var result = await _orderServices.Mediator.Send(command with { RequestId = requestId }, ct);
+            var result = await _mediator.Send(command with { RequestId = requestId }, ct);
 
             if (result.IsFailed)
                 return result.ToActionResult(this);
@@ -40,7 +41,7 @@ namespace Order.API.Controllers
             [FromRoute] Guid orderId,
             CancellationToken ct)
         {
-            var result = await _orderServices.Mediator.Send(new GetOrderByIdQuery(orderId), ct);
+            var result = await _mediator.Send(new GetOrderByIdQuery(orderId), ct);
 
             if (result.IsFailed)
                 return result.ToActionResult(this);
@@ -53,9 +54,18 @@ namespace Order.API.Controllers
             [FromQuery] GetAllOrdersQuery query,
             CancellationToken ct)
         {
-            var items = await _orderServices.Mediator.Send(query, ct);
+            var items = await _mediator.Send(query, ct);
 
             return Ok(items);
         }
+
+        [HttpPost("{orderId:guid}/cancel")]
+        public async Task<IActionResult> CancelOrder([FromRoute] Guid orderId, CancellationToken ct)
+        {
+            var result = await _mediator.Send(new CancelOrderCommand(orderId), ct);
+            
+            return result.IsSuccess ? NoContent() : result.ToActionResult(this);
+        }
+
     }
 }

@@ -55,8 +55,6 @@ namespace Order.API.Extensions
                     cfg.ConfigureEndpoints(context);
                 });
             });
-
-            builder.Services.AddScoped<OrderServices>();
         }
 
         public static void AddHealthChecks(this IHostApplicationBuilder builder)

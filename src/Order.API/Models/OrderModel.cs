@@ -14,7 +14,7 @@ namespace Order.API.Models
 
         public DateTime CreatedAt { get; private set; }
 
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; private set; }
 
         public List<OrderItem> Items { get; set; } = new();
 
@@ -30,6 +30,10 @@ namespace Order.API.Models
             CreatedAt = DateTime.UtcNow;
             Status = OrderStatus.Processing;
         }
+
+        public bool CanBeCancelled() => Status == OrderStatus.Processing;
+
+        public void Cancel() => Status = OrderStatus.Cancelled;
     }
 
     public enum OrderStatus
